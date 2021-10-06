@@ -1,20 +1,40 @@
-on: [push] # push 代码时触发
-jobs: 
-    deploy: 
-        runs-on: ubuntu-latest
-        name: Tencent Cloudbase Github Action Example
-        steps: 
-        - name: Checkout
-          uses: actions/checkout@v2
-        # 使用云开发 Github Action 部署
-        - name: Deploy static to Tencent CloudBase
-          id: deployStatic
-          uses: TencentCloudBase/cloudbase-action@v2
-          with: 
-            # 云开发的访问密钥 secretId 和 secretKey
-            secretId: ${{ secrets.SECRET_ID }}
-            secretKey: ${{ secrets.SECRET_KEY }}
-            # 云开发的环境id
-            envId: ${{ secrets.ENV_ID }}
-            # Github 项目静态文件的路径
-            staticSrcPath: public
+name: Auto publish to static website
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  hugo-publish:
+    name: publish content to static website
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout blog repo
+        uses: actions/checkout@v2
+
+      - name: setup hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: latest
+          extended: true
+
+      - name: build content to public site
+        working-directory: ./
+        run: hugo --minify --gc
+
+      - name: install nodejs
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: install tencent cloud cloudbase
+        shell: bash
+        run: npm i -g @cloudbase/cli
+
+      - name: publish blog to tencent static site
+        working-directory: ./public
+        shell: bash
+        run: |
+          tcb login --apiKeyId ${{ secrets.QCLOUDAPIKEYID }} --apiKey ${{ secrets.QCLOUDAPIKEY }}
+          tcb hosting deploy ./ -e ${{ secrets.QCLOUDENVID }}
