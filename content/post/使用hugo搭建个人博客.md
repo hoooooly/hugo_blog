@@ -3,7 +3,7 @@ title:       "使用hugo搭建个人博客"
 subtitle:    ""
 description: "如何使用hugo快速搭建个人或企业网站"
 date:        2021-10-06T20:06:27+08:00
-author:      holy
+author:   holy
 image:       ""
 tags:        ["hugo", "blog"]
 categories:  ["Posts" ]
@@ -152,5 +152,12 @@ Press Ctrl+C to stop
 
 ### 推送到仓库
 
+在GitHub上新建仓库，初始化并推送。
 
 ### 自动部署
+
+没成功，下次研究。
+
+### 手动部署
+
+部署到腾讯云的静态网站托管平台，看官方文档即可。
