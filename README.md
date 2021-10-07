@@ -7,5 +7,6 @@
 腾讯云提供的静态网站托管服务
 
 
-原博客地址[https://hoooooly.github.io/](https://hoooooly.github.io/)
+原博客地址[https://hoooooly.github.io](https://hoooooly.github.io)
+
 新博客地址[https://holychan.ltd](https://holychan.ltd/)
