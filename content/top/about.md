@@ -6,7 +6,7 @@ holy，男，电子信息科学与技术专业。
 
 热爱一切热爱的东西，业余时间花精力琢磨。
 
-把基于Hexo的博客换成了Hugo，迁移太麻烦，重新开始。
+把基于Hexo的博客换成了Hugo。
 
 原博客可访问[https://hoooooly.github.io](https://hoooooly.github.io)。
 
