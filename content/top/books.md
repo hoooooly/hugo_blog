@@ -1,10 +1,5 @@
-## [Machine learning学习笔记](https://zhaohuabing.com/machine-learning) 
+## [Kali渗透学习笔记](https://espholychan.gitbook.io/kali/)
 
-Coursera 在线课程 [Machine learning]( https://www.coursera.org/learn/machine-learning) 笔记<BR>
-讲师: 吴恩达(Andrew Ng) <BR>
-课程地址：https://www.coursera.org/learn/machine-learning<BR>
+学神MT老师渗透课程  学习笔记
 
-## [这是书名 学习笔记](https://书的地址)
-
-基于Gitbook创建的
-这是如何实现的？
+课程地址:[2021年Kali渗透教程/网络安全/kali/Linux/黑客/web安全/信息安全/白帽黑客](https://www.bilibili.com/video/BV1Kt411u73T)
