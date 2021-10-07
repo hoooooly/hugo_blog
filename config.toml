@@ -1,7 +1,8 @@
-baseurl = "https://holychan.com"
+# 网站根目录，必须配置正确，否者会出现部署后找不到页面的情况
+baseurl = "https://holychan.ltd"
 title = "HOLY"
 theme = "hugo-theme-cleanwhite"
-languageCode = "en-us"
+languageCode = "zh-cn"
 # Enable comments by entering your Disqus shortname
 disqusShortname = ""
 googleAnalytics = ""

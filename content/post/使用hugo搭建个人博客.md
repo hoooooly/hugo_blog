@@ -3,7 +3,7 @@ title:       "使用hugo搭建个人博客"
 subtitle:    ""
 description: "如何使用hugo快速搭建个人或企业网站"
 date:        2021-10-06T20:06:27+08:00
-author:      "holy"
+author:      holy
 image:       ""
 tags:        ["hugo", "blog"]
 categories:  ["Posts" ]
