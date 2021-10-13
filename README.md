@@ -1,7 +1,7 @@
 <!--
  * @Author: holy
  * @Date: 2021-10-13 16:45:59
- * @LastEditTime: 2021-10-13 17:03:14
+ * @LastEditTime: 2021-10-13 17:10:39
  * @LastEditors: holy
  * @Description: 
  * @FilePath: \hugo_blog\README.md
@@ -52,10 +52,14 @@ tcb -v
 
 ## 登录
 
-在您的终端中输入下面的命令
+在您的终端中输入下面的命令：
 
 ```bash
 tcb login
 ```
 
 CloudBase CLI 会自动打开云开发控制台获取授权，您需要点击同意授权按钮允许 CloudBase CLI 获取授权。如您没有登录，您需要登录后才能进行此操作。
+
+# 部署
+
+运行deplay.bat部署。
