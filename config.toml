@@ -36,7 +36,7 @@ home = ["HTML", "RSS", "Algolia"]
   algolia_apiKey = ""
 
   # Sidebar settings
-  sidebar_about_description = "关于我的描述"
+  sidebar_about_description = "总有人间二两风，填我四万八千梦"
   #sidebar_avatar = "img/avatar-zhaohuabing.jpg"      # use absolute URL, seeing it's used in both `/` and `/about/`
   sidebar_avatar = "img/holychan.jpg"      # use absolute URL, seeing it's used in both `/` and `/about/`
 
@@ -72,7 +72,7 @@ home = ["HTML", "RSS", "Algolia"]
   # linkedin       = "https://www.linkedin.com/in/yourlinkedinid"
   # stackoverflow  = "https://stackoverflow.com/users/yourstackoverflowid"
   # instagram     = "full profile url in instagram"
-  # github         = "https://github.com/yourgithub"
+  github         = "https://github.com/hoooooly"
   # wechat         = "your wechat qr code image"
   # medium         = "full profile url in medium"
   # pinterest     = "full profile url in pinterest"
@@ -83,9 +83,9 @@ home = ["HTML", "RSS", "Algolia"]
   # xing          = "https://www.xing.com/profile/yourxingid"
   # git           = "full profile url for git user"
   
- # [[params.friend_link]]
- # title = "Linda的博客"
- # href =  "https://zhaozhihan.com"
+  [[params.friend_link]]
+  title = "李文周的博客"
+  href =  "https://www.liwenzhou.com/"
 
  # [[params.bookmark_link]]
  # title =  "Martin Fowler"
