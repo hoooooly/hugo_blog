@@ -91,9 +91,11 @@ home = ["HTML", "RSS", "Algolia"]
   title =  "阮一峰的网络日志"
   href =  "https://www.ruanyifeng.com/blog/"
 
- # [[params.bookmark_link]]
- # title = "ServiceMesher"
- # href =  "http://www.servicemesher.com"
+  [[params.bookmark_link]]
+  title = "煎鱼大佬的博客"
+  href =  "https://eddycjy.com/"
+
+
  # [[params.bookmark_link]]
  # title =  "Pxhere"
  # href = "https://pxhere.com"
