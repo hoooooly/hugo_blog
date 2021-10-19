@@ -87,9 +87,10 @@ home = ["HTML", "RSS", "Algolia"]
   title = "李文周的博客"
   href =  "https://www.liwenzhou.com/"
 
- # [[params.bookmark_link]]
- # title =  "Martin Fowler"
- # href =  "https://martinfowler.com"
+  [[params.bookmark_link]]
+  title =  "阮一峰的网络日志"
+  href =  "https://www.ruanyifeng.com/blog/"
+
  # [[params.bookmark_link]]
  # title = "ServiceMesher"
  # href =  "http://www.servicemesher.com"
