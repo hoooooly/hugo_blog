@@ -87,11 +87,11 @@ home = ["HTML", "RSS", "Algolia"]
   title = "李文周的博客"
   href =  "https://www.liwenzhou.com/"
 
-  [[params.bookmark_link]]
+  [[params.friend_link]]
   title =  "阮一峰的网络日志"
   href =  "https://www.ruanyifeng.com/blog/"
 
-  [[params.bookmark_link]]
+  [[params.friend_link]]
   title = "煎鱼大佬的博客"
   href =  "https://eddycjy.com/"
 
