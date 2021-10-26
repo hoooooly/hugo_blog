@@ -1,11 +1,3 @@
-<!--
- * @Author: your name
- * @Date: 2021-10-26 09:35:51
- * @LastEditTime: 2021-10-26 15:51:02
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \undefinedd:\hugo_blog\content\post\Go语言对文件的操作.md
--->
 ---
 title: "Go语言对文件的操作"
 subtitle: ""
