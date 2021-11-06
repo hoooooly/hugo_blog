@@ -1,13 +1,12 @@
-echo "start push"
+@echo "start push"
 git add .
 
-echo "add commit"
+@echo "add commit"
 
 git commit -m %0
 
 git push
 
-echo "push successful"
+@echo "push successful"
 
-pause
-
+@pause
