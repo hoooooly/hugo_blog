@@ -84,6 +84,10 @@ home = ["HTML", "RSS", "Algolia"]
   # git           = "full profile url for git user"
   
   [[params.friend_link]]
+  title = "地鼠文档"
+  href =  "https://www.topgoer.cn/"
+
+  [[params.friend_link]]
   title = "李文周的博客"
   href =  "https://www.liwenzhou.com/"
 
@@ -94,6 +98,7 @@ home = ["HTML", "RSS", "Algolia"]
   [[params.friend_link]]
   title = "煎鱼大佬的博客"
   href =  "https://eddycjy.com/"
+
 
 
  # [[params.bookmark_link]]

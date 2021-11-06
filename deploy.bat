@@ -11,4 +11,3 @@ tcb hosting delete / -e blog-1gfz2hntbae53791 && tcb hosting deploy ./public/ / 
 
 echo "上传成功，部署完成！"
 
-pause
