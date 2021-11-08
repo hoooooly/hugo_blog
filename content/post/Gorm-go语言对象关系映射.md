@@ -103,7 +103,7 @@ type User struct {
 
 1. 支持的结构标签
 
-声明 model 时，tag 是可选的，GORM 支持以下 tag： tag 名大小写不敏感，但建议使用 camelCase 风格
+声明 `model` 时，`tag` 是可选的，`GORM` 支持以下 `tag：tag 名`，大小写不敏感，但建议使用 `camelCase` 风格
 
 | 标签 | 说明 |
 | :-- | :-- |
@@ -190,4 +190,211 @@ type Animal struct {
   Age      int64
 }
 ```
+
+### 复数表名
+
+表名是结构体名称的复数形式。
+
+```go
+type User struct {} // 默认的表名是 `users`
+
+// 设置 `User` 的表名为 `profiles`
+func (User) TableName() string {
+  return "profiles"
+}
+
+func (u User) TableName() string {
+    if u.Role == "admin" {
+        return "admin_users"
+    } else {
+        return "users"
+    }
+}
+
+// 如果设置禁用表名复数形式属性为 true，`User` 的表名将是 `user`
+db.SingularTable(true)
+```
+
+### 指定表名
+
+```go
+// 用 `User` 结构体创建 `delete_users` 表
+db.Table("deleted_users").CreateTable(&User{})
+
+var deleted_users []User
+db.Table("deleted_users").Find(&deleted_users)
+//// SELECT * FROM deleted_users;
+
+db.Table("deleted_users").Where("name = ?", "jinzhu").Delete()
+//// DELETE FROM deleted_users WHERE name = 'jinzhu';
+```
+
+### 修改默认表名
+
+可以通过定义 `DefaultTableNameHandler` 字段来对表名使用任何规则。
+
+```go
+gorm.DefaultTableNameHandler = func (db *gorm.DB, defaultTableName string) string  {
+    return "prefix_" + defaultTableName;
+}
+```
+
+### 蛇形列名
+
+列名是字段名的蛇形小写形式
+
+```go
+type User struct {
+  ID        uint      // 字段名是 `id`
+  Name      string    // 字段名是 `name`
+  Birthday  time.Time // 字段名是 `birthday`
+  CreatedAt time.Time // 字段名是 `created_at`
+}
+
+// 重写列名
+type Animal struct {
+    AnimalId    int64     `gorm:"column:beast_id"`         // 设置列名为 `beast_id`
+    Birthday    time.Time `gorm:"column:day_of_the_beast"` // 设置列名为 `day_of_the_beast`
+    Age         int64     `gorm:"column:age_of_the_beast"` // 设置列名为 `age_of_the_beast`
+}
+```
+
+### 时间戳跟踪
+
+#### CreatedAt
+
+对于有 `CreatedAt` 字段的模型，它将被设置为首次创建记录的当前时间。
+
+```go
+db.Create(&user) // 将设置 `CreatedAt` 为当前时间
+
+// 使用 `Update` 方法来更改默认时间
+db.Model(&user).Update("CreatedAt", time.Now())
+```
+
+#### UpdatedAt
+
+对于有 `UpdatedAt` 字段的模型，它将被设置为记录更新时的当前时间。
+
+```go
+db.Save(&user) // 将设置 `UpdatedAt` 为当前时间
+
+db.Model(&user).Update("name", "jinzhu") // 将设置 `UpdatedAt` 为当前时间
+```
+
+#### DeletedAt
+
+对于有 `DeletedAt` 字段的模型，当删除它们的实例时，它们并没有被从数据库中删除，只是将 `DeletedAt` 字段设置为当前时间。
+
+## 连接数据库
+
+### 支持的数据库
+
+GORM 官方支持的数据库类型有： `MySQL`, `PostgreSQL`, `SQlite`, `SQL Server`。
+
+为了连接数据库，首先要导入数据库驱动程序。例如：
+
+```go
+import _ "gorm.io/driver/mysql"
+```
+
+GORM 已经包含了一些驱动程序，为了方便的去记住它们的导入路径，你可以像下面这样导入 mysql 驱动程序
+
+```go
+import _ "gorm.io/driver/mysql"
+// import _ "gorm.io/driver/postgres"
+// import _ "gorm.io/driver/sqlite"
+// import _ "gorm.io/driver/sqlserver"
+```
+
+### MySQL
+
+```go
+import (
+  "gorm.io/driver/mysql"
+  "gorm.io/gorm"
+)
+
+func main() {
+  // 参考 https://github.com/go-sql-driver/mysql#dsn-data-source-name 获取详情
+  dsn := "user:pass@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local"
+  db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+}
+```
+
+> 注意：想要正确的处理 time.Time ，您需要带上 parseTime 参数， ([更多参数](https://github.com/go-sql-driver/mysql#parameters)) 要支持完整的 UTF-8 编码，您需要将 charset=utf8 更改为 charset=utf8mb4 。
+
+MySQl 驱动程序提供了 一些高级配置 可以在初始化过程中使用，例如：
+
+```go
+db, err := gorm.Open(mysql.New(mysql.Config{
+  DSN: "gorm:gorm@tcp(127.0.0.1:3306)/gorm?charset=utf8&parseTime=True&loc=Local", // DSN data source name
+  DefaultStringSize: 256, // string 类型字段的默认长度
+  DisableDatetimePrecision: true, // 禁用 datetime 精度，MySQL 5.6 之前的数据库不支持
+  DontSupportRenameIndex: true, // 重命名索引时采用删除并新建的方式，MySQL 5.7 之前的数据库和 MariaDB 不支持重命名索引
+  DontSupportRenameColumn: true, // 用 `change` 重命名列，MySQL 8 之前的数据库和 MariaDB 不支持重命名列
+  SkipInitializeWithVersion: false, // 根据当前 MySQL 版本自动配置
+}), &gorm.Config{})
+```
+
+#### 自定义驱动
+
+`GORM` 允许通过 `DriverName` 选项自定义 `MySQL` 驱动，例如：
+
+```go
+import (
+  _ "example.com/my_mysql_driver"
+  "gorm.io/gorm"
+)
+
+db, err := gorm.Open(mysql.New(mysql.Config{
+  DriverName: "my_mysql_driver",
+  DSN: "gorm:gorm@tcp(localhost:9910)/gorm?charset=utf8&parseTime=True&loc=Local", // Data Source Name，参考 https://github.com/go-sql-driver/mysql#dsn-data-source-name
+}), &gorm.Config{})
+```
+
+#### 现有的数据库连接
+
+`GORM` 允许通过一个现有的数据库连接来初始化`*gorm.DB`。
+
+```go
+import (
+  "database/sql"
+  "gorm.io/gorm"
+)
+
+sqlDB, err := sql.Open("mysql", "mydb_dsn")
+gormDB, err := gorm.Open(mysql.New(mysql.Config{
+  Conn: sqlDB,
+}), &gorm.Config{})
+```
+
+### SQL Server
+
+```go
+import (
+  "gorm.io/driver/sqlserver"
+  "gorm.io/gorm"
+)
+
+// github.com/denisenkom/go-mssqldb
+dsn := "sqlserver://gorm:LoremIpsum86@localhost:9930?database=gorm"
+db, err := gorm.Open(sqlserver.Open(dsn), &gorm.Config{})
+```
+
+# CURD接口
+
+## 创建
+
+## 查询
+
+## 高级查询
+
+## 更新
+
+## 删除
+
+## 原生SQL和SQL生成器
+
+
 

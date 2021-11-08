@@ -17,7 +17,7 @@ home = ["HTML", "RSS", "Algolia"]
   header_image = "img/home-bg-jeep.jpg"
   SEOTitle = "Holy's Blog"
   description = "holy的个人博客 | 一起发现更大的世界"
-  keyword = "holy的博客, holy, Holy, , holy的网络日志, 赵化冰的博客, Holy's Blog, 博客, 个人网站, 互联网, Web"
+  keyword = "holy的博客, holy, Holy, , holy的网络日志, Holy's Blog, 博客, 个人网站, 互联网, Web"
   slogan = "唯信仰和日月亘古不朽"
 
   image_404 = "img/404-bg.jpg"
@@ -90,6 +90,11 @@ home = ["HTML", "RSS", "Algolia"]
   [[params.friend_link]]
   title = "李文周的博客"
   href =  "https://www.liwenzhou.com/"
+
+  [[params.friend_link]]
+  title = "狗爱心螃蟹的博客"
+  href =  "https://mojotv.cn/"
+  
 
   [[params.friend_link]]
   title =  "阮一峰的网络日志"
