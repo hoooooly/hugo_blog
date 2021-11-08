@@ -1,5 +1,5 @@
 ---
-title: "Gorm Go语言对象关系映射"
+title: "Gorm Go语言对象关系映射-入门指南"
 subtitle: ""
 description: ""
 date: 2021-11-07T11:06:44+08:00
@@ -369,6 +369,18 @@ gormDB, err := gorm.Open(mysql.New(mysql.Config{
 }), &gorm.Config{})
 ```
 
+### SQLite
+
+```go
+import (
+  "gorm.io/driver/sqlite"
+  "gorm.io/gorm"
+)
+
+// github.com/mattn/go-sqlite3
+db, err := gorm.Open(sqlite.Open("gorm.db"), &gorm.Config{})
+```
+
 ### SQL Server
 
 ```go
@@ -382,19 +394,6 @@ dsn := "sqlserver://gorm:LoremIpsum86@localhost:9930?database=gorm"
 db, err := gorm.Open(sqlserver.Open(dsn), &gorm.Config{})
 ```
 
-# CURD接口
-
-## 创建
-
-## 查询
-
-## 高级查询
-
-## 更新
-
-## 删除
-
-## 原生SQL和SQL生成器
 
 
 
