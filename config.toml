@@ -94,7 +94,10 @@ home = ["HTML", "RSS", "Algolia"]
   [[params.friend_link]]
   title = "狗爱心螃蟹的博客"
   href =  "https://mojotv.cn/"
-  
+
+  [[params.friend_link]]
+  title = "大俊的博客"
+  href =  "https://darjun.github.io/post/  "
 
   [[params.friend_link]]
   title =  "阮一峰的网络日志"
