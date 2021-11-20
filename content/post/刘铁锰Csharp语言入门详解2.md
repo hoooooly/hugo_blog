@@ -7,6 +7,7 @@ author: holy
 image: ""
 tags: ["C#"]
 categories: ["Posts" ]
+typora-root-url: ..\..\static
 ---
 
 
@@ -208,9 +209,157 @@ namespace MyExample
 }
 ```
 
+## 汉诺塔问题
+
+[参考博文地址]([(156条消息) C#中的递归以及解决汉诺塔问题_柠檬i的博客-CSDN博客_c#汉诺塔问题递归算法](https://blog.csdn.net/weixin_49125123/article/details/112827223))
+
+汉诺塔由法国数学家爱德华·卢卡斯创造，他曾经编写了一个印度的古老传说：
+
+> 在世界中心贝拿勒斯（在印度北部）的圣庙里，一块黄铜板上插着三根宝石针。印度教的主神梵天在创造世界的时候，在其中一根针上从下到上地穿好了由大到小的64片金片，这就是所谓的汉诺塔。不论白天黑夜，总有一个僧侣在按照下面的法则移动这些金片：一次只移动一片，不管在哪根针上，小片必须在大片上面。僧侣们预言，当所有的金片都从梵天穿好的那根针上移到另外一根针上时，世界就将在一声霹雳中消灭，而梵塔、庙宇和众生也都将同归于尽。
+
+### 怎么解决汉诺塔问题？
+
+要完成四层汉诺塔，需要先把第四层盘子从A柱放到C柱，而要把第四层盘子放到C柱，就要把上面三层的盘子放到B柱：
+
+![img](/images/hannuota.png)
+
+那么要把这三层盘子移到B柱，那么就要先把第三层盘子移到B柱。
+要把第三层盘子移到B柱，就要把第二层盘子移到C柱子。
+要把第二层盘子移到C柱，就要把第一层盘子移到B柱子。
+移动一层汉诺塔到另一个柱不简单吗？
+这样子把问题解决了，第四层盘子就可以移动到C柱上了。
+然后把剩下的三层汉诺塔也按照上面的思想，就可以移动到C柱上了。
+
+### 具体代码实现
+
+把大象装进冰箱需要多少步
+
+1. 把冰箱门打开
+2. 把大象放进去
+3. 把冰箱门关上
+
+把汉诺塔放到C柱需要多少步？
+
+1. 把底层上面的盘子放到B柱
+
+2. 把最底层盘子放到C柱
+
+3. 把B柱那些盘子放到C柱
+
+抽象一下就是：
+
+1. 把n-1层盘子从起点移到暂存区
+
+2. 然后把第n层盘子从起点移到终点
+
+3. 然后把n-1层盘子从暂存区移到终点
+
+在这里可以创建一个Move方法来移动盘子
+
+```csharp
+static void Move(int pile, char src, char tmp, char dst)
+{
+
+}
+```
+
+`src`就是源起点，`tmp`就是暂存区，`dst`就是终点
+
+最外层的`Move`方法完成的是把`pile`层汉诺塔从`src`经过`tmp`移动到`dst`
+
+**现在要把大象装进冰箱了**
+
+在`Move`方法里面调用`Move`方法来解决之后的问题：
+
+1. 把冰箱门打开
+
+  ```csharp
+  Move(pile - 1, src, dst, tmp);
+  ```
 
 
+  这层`Move`完成的是把`pile-1`层汉诺塔从`src`经过`dst`移动到`tmp`
+
+2. 把大象塞进去	
+
+   ```csharp
+   Move(1, src, tmp, dst);
+   ```
 
 
+   这层`Move`完成的是把最底层汉诺塔盘子从`src`直接移动到`dst`
+
+3. 把门关上
+
+   ```csharp
+   Move(pile - 1, tmp, src, dst);
+   ```
 
 
+   这层`Move`完成的是把`pile-1`层汉诺塔从`tmp`经过`src`移动到`dst`
+
+`Move`方法完整代码：
+
+```csharp
+static void Move(int pile, char src, char tmp, char dst)
+{
+    if (pile ==1)
+    {
+        Console.WriteLine($"{src}-->{dst}");
+        steps++;
+        return;
+    }
+    Move(pile - 1, src, dst, tmp);
+    Move(1, src, tmp, dst);
+    Move(pile-1, tmp, src, dst);
+}
+```
+
+每一层`Move`方法都有他自己的起点、暂存区和终点，我们只需要把上一层的起点、暂存区和终点传过去就行了。
+
+### 完整代码
+
+```csharp
+using System;
+
+namespace Hannuota
+{
+    internal class Program
+    {
+        public const int Max_VALUE = 30; //声明最大层数
+        public static int steps = 0;
+        static void Main(string[] args)
+        {
+            int levels;
+            Console.WriteLine($"输入汉诺塔层数（1-{Max_VALUE}）:");
+            levels = int.Parse(Console.ReadLine());
+            if (levels > 0 && levels < Max_VALUE)
+            {
+                Move(levels, 'A', 'B', 'C');
+                Console.WriteLine($"一共移动了{Program.steps}次。");
+                Console.ReadKey();
+                return;
+            }
+            Console.WriteLine("输入范围有误");
+            Console.ReadKey();
+        }
+
+        static void Move(int pile, char src, char tmp, char dst)
+        {
+            if (pile ==1)
+            {
+                Console.WriteLine($"{src}-->{dst}");
+                steps++;
+                return;
+            }
+            Move(pile - 1, src, dst, tmp);
+            Move(1, src, tmp, dst);
+            Move(pile-1, tmp, src, dst);
+        }
+    }
+}
+```
+
+运行结果：
+
+![image-20211120135027277](/images/image-20211120135027277.png)
