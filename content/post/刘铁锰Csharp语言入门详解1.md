@@ -5,7 +5,7 @@ description: ""
 date: 2021-11-19T20:23:26+08:00
 author: holy
 image: ""
-tags: ["C#", "class"]
+tags: ["Csharp",]
 categories: ["Posts" ]
 ---
 
@@ -126,7 +126,6 @@ namespace EventSample
 
 绑定(Binding)指的是编译器如果把一个成员与类或对象关联起来
 - 不可小觑"."操作符——成员访问
-
 
 
 

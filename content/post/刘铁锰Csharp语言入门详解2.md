@@ -5,7 +5,7 @@ description: ""
 date: 2021-11-19T22:21:26+08:00
 author: holy
 image: ""
-tags: ["C#"]
+tags: ["Csharp"]
 categories: ["Posts" ]
 typora-root-url: ..\..\static
 ---
