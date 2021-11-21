@@ -4,5 +4,8 @@
 
 1. [类成员和对象](https://holychan.ltd/post/刘铁锰csharp语言入门详解1/)
 2. [基本元素概览 类型](https://holychan.ltd/post/刘铁锰csharp语言入门详解2/)
-2. [详解类型、变量与对象](https://holychan.ltd/post/刘铁锰csharp语言入门详解3/)
+3. [详解类型、变量与对象](https://holychan.ltd/post/刘铁锰csharp语言入门详解3/)
+4. [方法的定义、调用和调试](https://holychan.ltd/post/刘铁锰csharp语言入门详解4/)
+5. [操作符详解](https://holychan.ltd/post/刘铁锰csharp语言入门详解5/)
 
+更新中...

@@ -193,3 +193,49 @@ typora-root-url: ..\..\static\images
 
   - 构造器的内存原理
 
+## 方法的重载（Overload)
+
+- 调用重载方法的示例
+
+- 声明带有重载的方法
+
+  - 方法签名（method signature)由方法的名称、类型形参的个数和它的每一个形参（按从左到右的顺序）的类型和种类（值、引用或输出）组成。**方法签名不包含返回类型**
+
+    ```csharp
+    class Calculator
+    {
+        public int Add(int a, int b)
+        {
+            return a + b;
+        }
+    
+        public int Add(int a, int b, int c)
+        {
+            return a + b + c;
+        }
+    
+        public double Add(double x, double y)
+        {
+            return x + y;
+        }
+    }
+    ```
+
+  - 实例构造函数签名由它的每一个形参（按从左往右的顺序）的类型和种类（值、引用或输出）组成
+
+  - 重载决策（到底调用哪一个重载）：用于在给定了参数列表和一组候选函数成员的情况下，选择一个最佳函数成员来实施调用
+
+  ## 如何对方法进行debug
+
+  - 设置断点（breakpoint）
+  - 观察方法调用时的call stack
+  - Step-in（F11），Step-over（F10），Step-out（Shift+F11）
+  - 观察局部变量的值和变化
+
+## 方法的调用与栈
+
+- 方法调用时栈内存的分配
+
+  - 对stack frame的分析
+
+    
