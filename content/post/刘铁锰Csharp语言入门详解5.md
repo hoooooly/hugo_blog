@@ -45,3 +45,112 @@ typora-root-url: ..\..\static\images
 - 操作符是用来操作数据的，被操作符操作的数据称为操作数（Operand）
 
   > 注：表中越上的的操作符优先级越高
+
+## 操作符的本质
+
+- 操作符的本质是函数（即算法）的“简记法”
+
+  - 假如没有发明“+”、只有`Add`函数，算式`3+4+5`将可以写成`Add(Add(3,4),5)`
+  - 假如没有发明“x”、只有`Mul`函数，算式`3+4+5`将可以写成`Add(3, Mul(3,4))`，注意优先级
+
+- 操作符不能脱离与它关联的数据类型
+
+  - 可以说操作符就是与固定数据类型相关联的一套基本算法的简记法
+
+    ```csharp
+    using System;
+    using System.Collections.Generic;
+    
+    namespace CreateOperator
+    {
+        internal class Program
+        {
+            static void Main(string[] args)
+            {
+                Person person1 = new Person();
+                Person person2 = new Person();
+                person1.Name = "Deer";
+                person2.Name = "Dear's wife";
+                List<Person> nation = Person.GerMarry(person2, person2);
+                foreach (var p in nation)
+                {
+                    Console.WriteLine(p.Name);
+                }
+            }
+        }
+    
+        class Person
+        {
+            public string Name;
+            public static List<Person> GerMarry(Person p1, Person p2)
+            {
+                List<Person> people = new List<Person>();
+                people.Add(p1);
+                people.Add(p2);
+                for (int i = 0; i < 11; i++)
+                {
+                    Person child = new Person();
+                    child.Name = p1.Name + "&" + p2.Name + "s child";
+                    people.Add(child);
+                }
+                return people;
+            }
+        }
+    }
+    ```
+
+    
+
+  - 示例：为自定义数据类型创建操作符
+
+    ```csharp
+    using System;
+    
+    namespace CreateOperator
+    {
+        internal class Program
+        {
+            static void Main(string[] args)
+            {
+                int x = 5;
+                int y = 4;
+                int z = x / y;
+                Console.WriteLine(z); // 1
+    
+                double a = 5.0;
+                double b = 4.0;
+                double c = a / b;
+                Console.WriteLine(c); // 1.25
+            }
+        }
+    }
+    ```
+
+  ## 优先级与运算顺序
+
+  - 操作符的优先级
+
+    - 可以使用圆括号提高被括起来表达式的优先级
+    - 圆括号可以嵌套
+    - 不像数学里面有方括号和花括号，在C#语言里“[]”与“{}”有专门的用途
+
+  - 同优先级操作符的运算顺序
+
+    - 除了带有赋值功能的操作符，同优先级操作符都是由左向右进行运算
+
+      ```csharp
+      int x = 100;
+      int y = 200;
+      int z = 300;
+      x += y += z;
+      Console.WriteLine(x); // 600
+      Console.WriteLine(y); // 500
+      Console.WriteLine(z); // 300
+      ```
+
+    - 带有赋值功能的操作符的运行顺序是由右向左
+
+    - 与数学运算不同，计算机语言的同优先级运算没有“结合率”
+
+      - `3+4+5`只能理解为`Add(Add(3,4),5)`不能理解为`Add(3,Add(4,5))`
+
