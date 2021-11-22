@@ -153,4 +153,94 @@ typora-root-url: ..\..\static\images
     - 与数学运算不同，计算机语言的同优先级运算没有“结合率”
 
       - `3+4+5`只能理解为`Add(Add(3,4),5)`不能理解为`Add(3,Add(4,5))`
+    
+    ```csharp
+    using System;
+    using System.Collections.Generic;
+    using System.Windows.Forms;
+    
+    namespace OperatorsExample
+    {
+        internal class Program
+        {
+            static void Main(string[] args)
+            {
+                Calculator c = new Calculator();
+                /* double v = c.Add(1.0, 23.00);
+                 Console.WriteLine(v);*/
+                Action myAction = new Action(c.PrintHello);
+                myAction();
+    
+                int[] myIntArray = new int[] {1,2,3,4,5 };  //数组实列
+                Console.WriteLine(myIntArray[0]);
+                Console.WriteLine(myIntArray[myIntArray.Length -1]);
+    
+                Dictionary<string, Student> stuDic = new Dictionary<string, Student>();
+                for (int i = 0;  i<=100; i++)
+                {
+                    Student stu = new Student();
+                    stu.Name = "S_" + i.ToString();
+                    stu.Score = 100;
+                    stuDic.Add(stu.Name, stu);
+                }
+    
+                Student number6 = stuDic["S_6"];
+                Console.WriteLine(number6.Name, number6.Score); // 元素访问操作符
+    
+    
+                int x = 100;
+                int y = x++; // 先赋值，后执行操作
+                Console.WriteLine(x); // 101
+                Console.WriteLine(y); // 100
+    
+                // Metadata
+                Type t = typeof(int);
+                Console.WriteLine(t.Namespace);
+                Console.WriteLine(t.FullName);
+                Console.WriteLine(t.Name);
+                int n = t.GetMethods().Length;
+                foreach (var m in t.GetMethods())
+                {
+                    Console.WriteLine(m.Name);
+                }
+                Console.WriteLine(n);
+    
+                int I = default(int);
+                Console.WriteLine(I);  // 0
+    
+                Form myForm = default(Form);
+                Console.WriteLine(myForm==null); // true
+    
+                // 枚举类型
+                Level level = default(Level);
+                Console.WriteLine(level); // Low
+            }
+        }
+    
+        enum Level
+        {
+            Mid = 2,
+            Low = 1,
+            High = 3
+        }
+    
+        class Student
+        {
+            public string Name;
+            public int Score;
+        }
+    
+        class Calculator
+        {
+            public double Add(double a, double b)
+            {
+                return a + b;
+            }
+    
+            public void PrintHello()
+            {
+                Console.WriteLine("Hello");
+            }
+        }
+    }
 
