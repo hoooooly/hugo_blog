@@ -244,3 +244,210 @@ typora-root-url: ..\..\static\images
         }
     }
 
+## 类型转换
+
+- 隐式（implict）类型转换
+
+  - 不丢失精度的转换
+
+    ```csharp
+    int x = int.MaxValue;
+    Console.WriteLine(x);
+    long y = x;
+    Console.WriteLine(y);
+    ```
+
+  - 子类向父类的转换
+
+    ```csharp
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Teacher t = new Teacher();
+            Human h = t;
+            Animal a = h;
+            a.Eat(); // Eating...
+        }
+    }
+    
+    class Animal
+    {
+        public void Eat()
+        {
+            Console.WriteLine("Eating...");
+        }
+    }
+    
+    class Human : Animal
+    {
+        public void Think()
+        {
+            Console.WriteLine("Who I am?");
+        }
+    }
+    
+    class Teacher : Human
+    {
+        public void Teach()
+        {
+            Console.WriteLine("I teach programming.");
+        }
+    }
+    ```
+
+    装箱
+
+- 显式（explicit）类型转换
+
+  ```csharp
+  using System;
+  
+  namespace Conversion1Example
+  {
+      internal class Program
+      {
+          static void Main(string[] args)
+          {
+              Stone stone = new Stone();
+              stone.Age = 5000;
+              Monkey wukongsun = (Monkey)stone; // 石头变猴子
+              Console.WriteLine(wukongsun.Age); //10
+          }
+      }
+  
+      class Stone
+      {
+          public int Age;
+  
+          public static explicit operator Monkey(Stone stone)
+          {
+              // 显式类型转换操作符就是目标类型的一个实列构造器
+              Monkey m = new Monkey();
+              m.Age = stone.Age / 500;
+              return m;
+          }
+      }
+  
+      class Monkey
+      {
+          public int Age;
+      }
+  }
+  ```
+
+  - 有可能丢失精度（甚至发生错误）的转换，即cast
+
+  - 拆箱
+
+  - 使用Convert类
+
+    ```csharp
+    System.Convert
+    ```
+
+  - ToString方法与各数据类型的Parse/TryParse方法
+
+- 自定义类型转换操作符
+
+  - 示例
+
+
+### 自动精度提升
+
+```csharp
+var x = 3.0 * 4;
+Console.WriteLine(x.GetType().FullName); // double 会自动进行类型提升
+Console.WriteLine(x);
+```
+
+### 除运算符
+
+整型除法，返回的结果也是整数类型，小数点后的会被舍弃。除数不能为0，否者会报异常
+
+```csharp
+int a = 5;
+int b = 4;  // b不能为0
+int c = a / b;
+Console.WriteLine(c);  // 1
+Console.WriteLine(c.GetType().FullName); // System.Int32
+```
+
+浮点型除法，这里的d,e任何一个修改为int型，所得的结果也是和下面一样，这是因为在运行的时候如果两边的变量不是同一类型，会进行数值提升，自动提升到不损失精度的类型
+
+```csharp
+double d = 5.0;
+double e = 4.0;
+double f = d / e;
+Console.WriteLine(f);  // 1.25
+Console.WriteLine(f.GetType().FullName); // System.Double
+
+double g = double.PositiveInfinity; // 正无穷大
+double h = double.NegativeInfinity; // 负无穷大
+Console.WriteLine(g/h); // NaN
+
+double m = (double) 5 / 4; // 1.25,(T)x的操作优先级大于/
+double n = (double)(5 / 4); // 1
+```
+
+### 求余操作符和加法操作符
+
+```csharp
+// 求余运算符
+for (int i = 0; i < 10; i++)
+{
+    Console.WriteLine(i % 10);
+}
+
+double x = 3.5;
+double y = 3;
+Console.WriteLine(x % y); // 0.5
+
+// 加法操作符
+var a = 3.0 + 4;
+Console.WriteLine(a);
+Console.WriteLine(a.GetType().FullName); // System.Double
+
+string s1 = "123";
+string s2 = "abc";
+string s3 = s1 + s2;
+Console.WriteLine(s3);  
+```
+
+### 位移操作符
+
+```csharp
+int m = 7;
+int n = m << 1; // 左位移一位，相当于乘2，相反，右移相当于除2
+int k = m >> 2; // 右移溢出,在check上下文环境不会报错
+string strM = Convert.ToString(m, 2).PadLeft(32, '0');
+string strN = Convert.ToString(n, 2).PadLeft(32, '0');
+string strK = Convert.ToString(k, 2).PadLeft(32, '0');
+Console.WriteLine(strM); // 00000000000000000000000000000111
+Console.WriteLine(strN); // 00000000000000000000000000001110
+Console.WriteLine(strK); // 00000000000000000000000000000001
+Console.WriteLine(n); // 14
+```
+
+### 关系运算符
+
+```csharp
+// 关系运算符
+int x = 5;
+double y = 4.0;
+var result = x > y; 
+Console.WriteLine(result.GetType().FullName); // System.Boolean
+Console.WriteLine(result); // True
+
+char char1 = 'a';  // char类型归类于整数类型，对应Unicode码表上的字符
+char char2 = 'A';
+var res = char1 > char2;
+Console.WriteLine(res); // True
+ushort u1 = (ushort)char1;
+ushort u2 = (ushort)char2;
+Console.WriteLine($"u1:{u1}"); // u1:97
+Console.WriteLine($"u2:{u2}"); // u2:65
+```
+
+
+
