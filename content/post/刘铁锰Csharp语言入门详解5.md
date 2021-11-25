@@ -34,8 +34,8 @@ typora-root-url: ..\..\static\images
 | 逻辑“与”           | `&`                                                          |
 | 逻辑 XOR           | `^`                                                          |
 | 逻辑 OR            | `|`                                                          |
-| 逻辑 AND           | `&&`                                                         |
-| 条件 OR            | \`\|\|`                                                      |
+| 条件 AND           | `&&`                                                         |
+| 条件 OR            | `||`                                                         |
 | null 合并          | `??`                                                         |
 | 条件               | `?:`                                                         |
 | 赋值和lambda表达式 | `= *= /= %= += -= <<= >>= &= ^= \|= \>`                      |
@@ -447,7 +447,85 @@ ushort u1 = (ushort)char1;
 ushort u2 = (ushort)char2;
 Console.WriteLine($"u1:{u1}"); // u1:97
 Console.WriteLine($"u2:{u2}"); // u2:65
+
+string str1 = "abc";
+string str2 = "Abc";
+Console.WriteLine(str1 == str2 ); // False
+Console.WriteLine(str1.ToLower() == str2.ToLower()); // True
 ```
+
+### 逻辑运算符
+
+按位求与
+
+```csharp
+int x = 7;
+int y = 28;
+int z = x & y;
+string strX = Convert.ToString(x, 2).PadLeft(32, '0');
+string strY = Convert.ToString(y, 2).PadLeft(32, '0');
+string strZ = Convert.ToString(z, 2).PadLeft(32, '0');
+Console.WriteLine(strX); //00000000000000000000000000000111
+Console.WriteLine(strY); //00000000000000000000000000011100
+Console.WriteLine(strZ); //00000000000000000000000000000100
+```
+
+按位求或
+
+```csharp
+int x = 7;
+int y = 28;
+int z = x | y;
+string strX = Convert.ToString(x, 2).PadLeft(32, '0');
+string strY = Convert.ToString(y, 2).PadLeft(32, '0');
+string strZ = Convert.ToString(z, 2).PadLeft(32, '0');
+Console.WriteLine(strX); //00000000000000000000000000000111
+Console.WriteLine(strY); //00000000000000000000000000011100
+Console.WriteLine(strZ); //00000000000000000000000000011111
+```
+
+按位异或
+
+```csharp
+int x = 7;
+int y = 28;
+int z = x ^ y;
+string strX = Convert.ToString(x, 2).PadLeft(32, '0');
+string strY = Convert.ToString(y, 2).PadLeft(32, '0');
+string strZ = Convert.ToString(z, 2).PadLeft(32, '0');
+Console.WriteLine(strX); //00000000000000000000000000000111 
+Console.WriteLine(strY); //00000000000000000000000000011100
+Console.WriteLine(strZ); //00000000000000000000000000011011
+```
+
+条件与（&&）
+
+条件或（||）
+
+```csharp
+Nullable<int> n = null;
+int? m = null;
+n = 100;
+m = 100;
+Console.WriteLine(n); // 100
+Console.WriteLine(n.HasValue); //True
+Console.WriteLine(n.GetType().FullName); // System.Int32
+
+Console.WriteLine(m); // 100
+Console.WriteLine(m.HasValue); //True
+Console.WriteLine(m.GetType().FullName); // System.Int32
+```
+
+条件运算符（?:）
+
+```csharp
+int x = 90;
+string str = string.Empty;
+str = x >= 60 ? "passed" : "failed";
+Console.WriteLine(str); //passed
+```
+
+
 
 
 
