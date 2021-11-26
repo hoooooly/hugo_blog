@@ -8,5 +8,6 @@
 4. [方法的定义、调用和调试](https://holychan.ltd/post/刘铁锰csharp语言入门详解4/)
 5. [操作符详解](https://holychan.ltd/post/刘铁锰csharp语言入门详解5/)
 6. [表达式 语句详解](https://holychan.ltd/post/刘铁锰csharp语言入门详解6/)
+7. [字段 属性 索引器 常量](https://holychan.ltd/post/刘铁锰csharp语言入门详解7/)
 
 更新中...
