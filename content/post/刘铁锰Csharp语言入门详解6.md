@@ -187,4 +187,225 @@ typora-root-url: ..\..\static\images
   }
   ```
   
+  ### while语句
   
+  ```csharp
+  int score = 0;
+  bool canContinue = true;
+  while (canContinue)
+  {
+      Console.WriteLine("Please input first number:");
+      string str1 = Console.ReadLine();
+      int x = int.Parse(str1);
+  
+      Console.WriteLine("Please input second number:");
+      string str2 = Console.ReadLine();
+      int y = int.Parse(str2);
+  
+      int sum = x + y;
+      if(sum == 100)
+      {
+          score++;
+          Console.WriteLine("Correct!{0}+{1}={2}", x, y, sum);
+      }
+      else
+      {
+          Console.WriteLine("Error!{0}+{1}={2}", x, y, sum);
+          canContinue = false;
+      }
+      Console.WriteLine("Your score is {0}", score);
+      Console.WriteLine("GAME OVER!");
+  }
+  ```
+  
+  ### do语句
+  
+  ```csharp
+  int score = 0;
+  bool canContinue = true;
+  do
+  {
+      Console.WriteLine("Please input first number:");
+      string str1 = Console.ReadLine();
+      int x = int.Parse(str1);
+  
+      Console.WriteLine("Please input second number:");
+      string str2 = Console.ReadLine();
+      int y = int.Parse(str2);
+  
+      int sum = x + y;
+      if (sum == 100)
+      {
+          score++;
+          Console.WriteLine("Correct!{0}+{1}={2}", x, y, sum);
+      }
+      else
+      {
+          Console.WriteLine("Error!{0}+{1}={2}", x, y, sum);
+          canContinue = false;
+      }
+  } while (canContinue);
+  Console.WriteLine("Your score is {0}", score);
+  Console.WriteLine("GAME OVER!");
+  ```
+  
+  ### continue语句
+  
+  ```csharp
+  int score = 0;
+  bool canContinue = true;
+  do
+  {
+      Console.WriteLine("Please input first number:");
+      string str1 = Console.ReadLine();
+      int x = 0;
+      try
+      {
+          x = int.Parse(str1);
+      }
+      catch (Exception)
+      {
+  
+          Console.WriteLine("First number has problem! Restart");
+          continue;
+      }
+  
+      Console.WriteLine("Please input second number:");
+      string str2 = Console.ReadLine();
+      int y;
+      try
+      {
+          y = int.Parse(str2);
+      }
+      catch (Exception)
+      {
+  
+          Console.WriteLine("Second number has problem! Restart");
+          continue;
+      }
+      
+  
+      int sum = x + y;
+      if (sum == 100)
+      {
+          score++;
+          Console.WriteLine("Correct!{0}+{1}={2}", x, y, sum);
+      }
+      else
+      {
+          Console.WriteLine("Error!{0}+{1}={2}", x, y, sum);
+          canContinue = false;
+      }
+  } while (canContinue);
+  Console.WriteLine("Your score is {0}", score);
+  Console.WriteLine("GAME OVER!");
+  ```
+  
+  ### break语句
+  
+  ```csharp
+  int score = 0;
+  bool canContinue = true;
+  do
+  {
+      Console.WriteLine("Please input first number:");
+      string str1 = Console.ReadLine();
+  
+      if (str1.ToLower()=="end")
+      {
+          break;  // 输入end直接跳出
+      }
+      int x = 0;
+      try
+      {
+          x = int.Parse(str1);
+      }
+      catch (Exception)
+      {
+  
+          Console.WriteLine("First number has problem! Restart");
+          continue;
+      }
+  
+      Console.WriteLine("Please input second number:");
+      string str2 = Console.ReadLine();
+      if (str1.ToLower() == "end")
+      {
+          break;
+      }
+  
+      int y;
+      try
+      {
+          y = int.Parse(str2);
+      }
+      catch (Exception)
+      {
+  
+          Console.WriteLine("Second number has problem! Restart");
+          continue;
+      }
+      
+  
+      int sum = x + y;
+      if (sum == 100)
+      {
+          score++;
+          Console.WriteLine("Correct!{0}+{1}={2}", x, y, sum);
+      }
+      else
+      {
+          Console.WriteLine("Error!{0}+{1}={2}", x, y, sum);
+          canContinue = false;
+      }
+  } while (canContinue);
+  Console.WriteLine("Your score is {0}", score);
+  Console.WriteLine("GAME OVER!");
+  ```
+
+九九乘法表
+
+```csharp
+for (int i = 1; i <= 9; i++)
+{
+    for (int j = 1; j <= i; j++)
+    {
+        Console.Write("{0}x{1}={2}\t",i,j,i*j);
+    }
+    Console.WriteLine();
+}
+```
+
+### foreach语句
+
+迭代器
+
+```csharp
+using System.Collections;
+
+int[] intArray = new int[] { 1,2,3,4,5,6 };
+Console.WriteLine(intArray.GetType().FullName);
+Console.WriteLine(intArray is Array);
+IEnumerator enumerator = intArray.GetEnumerator(); // 迭代器
+while (enumerator.MoveNext())
+{
+    Console.WriteLine(enumerator.Current);
+}
+enumerator.Reset(); // 重置迭代器
+while (enumerator.MoveNext())
+{
+    Console.WriteLine(enumerator.Current);
+}
+```
+
+集合遍历
+
+```csharp
+List<int> intList = new List<int>() { 1, 2, 3, 4, 5 };
+
+foreach (var item in intList)
+{
+    Console.WriteLine(item);
+}
+```
+
