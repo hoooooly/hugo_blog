@@ -7,7 +7,6 @@ author: holy
 image: ""
 tags: ["tag1", "tag2"]
 categories: ["Posts" ]
-draft: false
 typora-root-url: ..\..\static\
 ---
 
