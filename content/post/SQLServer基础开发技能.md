@@ -436,9 +436,7 @@ go
     ```sql
     use	StudentManageDB
     go
-    -- 创建“主键”约束 primary key
-    -- 创建主键约束
-    -- 创建主键约束
+    
     use StudentManageDB
     go
     -- 创建主键约束
@@ -451,8 +449,105 @@ go
     alter table Students drop constraint uq_StudentIdNo
     alter table Students add constraint uq_StudentIdNo unique(StudentIdNo)
     ```
-
     
+
+### 检查约束
+
+```sql
+-- 创建检查约束
+if exists(select * from sysobjects where name='ck_Age')
+alter table Students drop constraint ck_Age
+alter table Students add constraint ck_Age check(Age between 18 and 25)
+
+if exists(select * from sysobjects where name='ck_PhoneNumber')
+alter table Students drop constraint ck_PhoneNumber
+alter table Students add constraint ck_PhoneNumber check(len(PhoneNumber)=11)
+```
+
+### 默认约束
+
+```sql
+-- 默认约束
+if exists(select * from sysobjects where name='df_StudentAddress')
+alter table Students drop constraint ck_StudentAddress
+alter table Students add constraint ck_StudentAddress default('地址不详') for StudentAddress
+```
+
+### 外键约束
+
+```sql
+-- 外键约束
+if exists(select * from sysobjects where name='fk_ClassId')
+alter table Students drop constraint fk_ClassId
+alter table Students add constraint fk_ClassId foreign key (ClassId) references StudentClass(ClassId)
+```
+
+## 数据完整性总结
+
+### 实体完整性
+
+- 能够唯一标识表中的每一条记录
+- 实现方式：主键、唯一键、IDENTITY属性
+
+### 域完整性
+
+	- 表中特定列数据的有效性，确保不会输入无效的值
+	- 实现方式：数据类型限制、缺省值、非空值
+
+### 引用完整性
+
+ - 维护表间数据的有效性、完整性
+ - 实现方式：建立外键，关联另一表的主键
+
+完整数据库创建过程
+
+```mermaid
+graph LR
+	建库 --> 建表 --> 主键约束 --> 域完整性约束 --> 外键约束
+```
+
+插入数据过程
+
+```mermaid
+graph LR
+	验证主键 --> 主外键关系 --> 约束检查 --> 插入成功
+```
+
+# 常用数据查询
+
+## 数据的基本查询
+
+### 理解查询
+
+- 服务器执行命令，在原始数据表中查找符合条件的数据，产生一个虚拟表
+- 虚拟表是数据组合后的重新展示，而不是原始的物理数据
+
+### 基本语法构成
+
+- 查询一般有四个基本组成部分
+
+  - 查询内容，如`select studentId, StudentName, Gender`
+
+  - 查询对象，如`from Students`
+
+  - 过滤条件，如`where Gender='男'`
+
+  - 结果排序，如`oder by StudentId DESC`
+
+- 基本查询语法框架
+
+  ```sql
+  select <列名>
+  from <表名>
+  [where <查询条件表达式>]
+  [order by <排序的列名>[ASC或DESC]]
+  ```
+
+  
+
+
+
+
 
 
 
