@@ -2,12 +2,12 @@
 title: "SQLServer基础开发技能"
 subtitle: ""
 description: ""
-date: 2021-11-27T16:37:14+08:00
+date: 2021-12-27T16:37:14+08:00
 author: holy
 image: ""
 tags: ["tag1", "tag2"]
 categories: ["Posts" ]
-draft: true
+draft: false
 typora-root-url: ..\..\static\
 ---
 
@@ -230,5 +230,230 @@ exec sp_attach_db StudentManageDB,
   - 是否有默认值：如果数据表的某列在用户不输入数据的时候，希望提供一个默认的内容
   - 是否为主键：主键是实体的唯一标识，保证实体不被重复。一个数据表必须有主键才有意义
 
- 
+ #### 标识符的特殊说明
+
+- 标识列使用的意义
+  - 一个数据表存储的实体，很难找到不重复的列作为主键
+  - SQLServer提供一个“标识列”，也叫“自动增长列”或“自动编号”，它本身没有什么具体意义，但我们也可以让它表示特定意义。
+- 标识列的使用方法
+  - 该列必须是整数类型，或没有小数位数的精确类型
+  - 标识种子：标识列的起始大小
+  - 标识增量：标识列每次递增的（自动增加）值
+- 注意问题
+  - 有标识列的数据表被删除某一行时，数据库会将该行空缺，而不会填补
+  - 标识列由系统自动维护，用户既不能自己输入数据，也不能修改数值
+  - 标识列可以同时定义为主键，也可以不定义为主键，根据需要决定
+
+```sql
+use StudentManageDB
+go
+if exists(select * from sysobjects where name='Students')
+drop table Students
+go
+
+create table Students
+(
+	StudentID int identity(100000,1), --学号
+	StudentName varchar(20) not null, --姓名
+	Gender char(2) not null, --性别
+	Birthday datetime not null, --出生日期
+	StudentIdNo numeric(18,0) not null, --身份证号
+	Age int not null, --年龄
+	PhoneNumber varchar(50), --手机号
+	StudentAddress varchar(500), --地址
+	ClassId int not null --班级外键
+)
+go
+
+-- 创建班级表
+if exists(select * from sysobjects where name='StudentClass')
+drop table StudentClass
+go
+
+create table StudentClass
+(
+	ClassId int primary key, --班级编号
+	ClassName varchar(20) not null
+)
+go
+
+-- 创建成绩表
+if exists(select * from sysobjects where name='ScoreList')
+drop table ScoreList
+go
+
+create table ScoreList
+(
+	Id int identity(1,1) primary key,
+	StudentID int not null, --学号外键
+	CSharp int null,
+	SQLServer int null,
+	UpdateTime datetime not null --更新时间
+)
+go
+
+-- 创建管理员表
+if exists(select * from sysobjects where name='Admins')
+drop table Admins
+go
+
+create table Admins
+(
+	LoginId int identity(1000,1) primary key,
+	LoginPwd varchar(20) not null, --登录密码
+	AdminName varchar(20) not null
+)
+go
+```
+
+## 数据的基本操作
+
+### 插入实体
+
+- 插入实体（数据行）语法
+
+  ```sql
+  insert [into] <表名> [列名] values <值列表>
+  ```
+
+- 插入实体的SQL语句示例
+
+  ```sql
+  insert into Students(StudentName,Gender,Birthday,StudentIdNo,Age,PhoneNumber,StudentAddress,ClassId)
+  values('张三','男','1990-01-20',433302198730989090,26,'010-1231231','深圳海上世界',4)
+  ```
+
+- 注意事项
+
+  - 列名个数=对应值的个数
+  - 非值类型的数据，必须放在单引号内
+  - 数据值的类型必须与定义的字段类型一致
+
+### 查询实体
+
+- 基本查询语法
+
+  ```sql
+  select <列名> from <源表名>[where<查询条件>]
+  ```
+
+- 查询实体的SQL语句示例
+
+  ```sql
+  select StudentId,StudentName from Students -- 查询两个字段
+  select * from Students -- *表示查询所有字段
+  ```
+
+### T-SQL中的运算符
+
+- 数据库常用运算符号
+
+  | 运算符 | 含义       |
+  | ------ | ---------- |
+  | =      | 等于       |
+  | >      | 大于       |
+  | <      | 小于       |
+  | >=     | 大于或等于 |
+  | <=     | 小于或等于 |
+  | <>     | 不等于     |
+  | !      | 非         |
+
+  ```sql
+  -- 查询年龄大于22的学号，姓名，性别
+  select StudentId,StudentName,Gender from Students where Age>=22
+  ```
+
+### 更新实体
+
+- 更新实体语法
+
+  ```sql
+  update <表名> set <列名=更新值>[where <更新条件>] 
+  ```
+
+- 更新实体的SQL语句示例
+
+  ```sql
+  -- 更新数据
+  update Students set Age=100, PhoneNumber='12345678910' where StudentID=100011
+  ```
+
+  使用update语句时，一定要注意where条件的配合使用
+
+### 删除实体
+
+- 删除数据表中数据语法
+
+  ```sql
+  delete from <表名>[where <删除条件>]
+  ```
+
+  ```sql
+  truncate table <表名>
+  ```
+
+- 删除实体的SQL语句示例
+
+  ```sql
+  delete from Students where StudentID=100010
+  delete from Students
+  
+  truncate table Students
+  ```
+
+  > 使用删除语句时，一定要注意where条件的配合使用
+  >
+  > delete删除数据时，要求该记录不能被外键引用，删除后标识列继续增长
+  >
+  > truncate删除数据时，要求删除的表不能由外键约束，删除后重新添加数据，删除后标识列重新编排
+  >
+  > truncate比delete执行速度快，而且使用的系统资源和事务日志资源更少
+
+# 数据完整性设计与实现
+
+## 数据完整性的设计
+
+### 完整性约束的类型
+
+- 常用三种类型的约束保证数据完整性
+
+  - 域（列）完整性
+  - 实体完整性
+  - 引用完整性
+
+- 主键约束与唯一约束
+
+  - 添加约束的基本语法
+
+    ```sql
+    alter table 表名 add constraint 约束名 约束类型 具体的约束说明
+    ```
+
+  - 约束名的取名规则推荐采用：约束类型、约束字段
+
+    - 主键（Primary）约束：如 PK_StudentId
+    - 唯一（Unique Key）约束：如UQ_StudentIdNo
+
+    ```sql
+    use	StudentManageDB
+    go
+    -- 创建“主键”约束 primary key
+    -- 创建主键约束
+    -- 创建主键约束
+    use StudentManageDB
+    go
+    -- 创建主键约束
+    if exists(select * from sysobjects where name='pk_StudentId')
+    alter table Students drop constraint pk_StudentId
+    alter table Students add constraint pk_StudentId primary key(StudentId)
+    
+    -- 创建唯一约束
+    if exists(select * from sysobjects where name='uq_StudentIdNo')
+    alter table Students drop constraint uq_StudentIdNo
+    alter table Students add constraint uq_StudentIdNo unique(StudentIdNo)
+    ```
+
+    
+
+
 
