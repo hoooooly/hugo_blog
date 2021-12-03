@@ -2,7 +2,7 @@
 title: "SQLServer基础开发技能"
 subtitle: ""
 description: ""
-date: 2021-12-27T16:37:14+08:00
+date: 2021-12-01T20:37:01+08:00
 author: holy
 image: ""
 tags: ["tag1", "tag2"]
@@ -543,7 +543,82 @@ graph LR
   [order by <排序的列名>[ASC或DESC]]
   ```
 
+- 查询全部行和列
+
+  ```sql
+  -- 查询全部行和列
+  select * from Students
+  ```
+
+- 查询部分行
+
+  ```sql
+   查询部分行
+  select StudentName,Gender,Birthday,Age from Students where Gender='男' and Age>=22
   
+  select StudentName,Gender,Birthday,Age from Students where Age>=22
+  ```
+
+  多个条件使用and连接
+
+- 使用"AS"或使用"="重新命名字段
+
+  ```sql
+  -- 自定义命名行
+  select StudentName as 学生姓名,性别=Gender,年龄=Age from Students
+  ```
+
+- 加号的使用
+
+  ```sql
+  -- 列的合并
+  select 姓名=StudentName,地址和电话=StudentAddress+'['+PhoneNumber+']' from Students
+  ```
+
+  > 注意：
+  >
+  > 1. `+`连接的数据类型必需兼容
+  > 2. 如果使用`+`连接字符型数据，结果为字符串数据的连接
+  > 3. 如果使用`+`连接数值型数据，结果为数值的和
+
+- 查询空列
+
+  ```sql
+  insert into ScoreList(StudentId,CSharp)values(100001, 89)
+  
+  select * from ScoreList where SQLServer is null
+  ```
+
+- 使用常量列
+
+  ```sql
+  select StudentName,Gender,Age='28' from Students where Gender='男'
+  ```
+
+  无中生有添加列
+
+- 限制固定行数
+
+  ```sql
+  select top 5 StudentName,Gender,Birthday from Students
+  ```
+
+- 返回百分之多少行
+
+  ```sql
+  select top 20 percent StudentName,Gender,Birthday from Students
+  ```
+
+- 按多列排序
+
+  ```sql
+  select StudentId,CSharp as C#,DB=SQLServerDB from ScoreList
+  order by SQLServerDB ASC,CSharp DESC
+  ```
+
+## 查询函数的使用
+
+## 聚合函数
 
 
 
