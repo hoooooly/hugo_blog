@@ -175,10 +175,157 @@ namespace Delegate1Example
     - 相当于“填空题”
     - 常位于代码中部
     - 委托有返回值
+  
+    ```csharp
+    using System;
+    
+    namespace Delegate2Example
+    {
+        internal class Program
+        {
+            static void Main(string[] args)
+            {
+                ProductFactory productFactory = new ProductFactory();
+                WrapFactory wrapFactory = new WrapFactory();
+    
+                Func<Product> func1 = new Func<Product>(productFactory.MakePizza);
+                Func<Product> func2 = new Func<Product>(productFactory.MakeToyCar);
+    
+                Box box1 = wrapFactory.WrapProduct(func1);
+                Box box2 = wrapFactory.WrapProduct(func2);
+    
+                Console.WriteLine(box1.Product.Name);
+                Console.WriteLine(box2.Product.Name);
+            }
+        }
+    
+        class Product
+        {
+            public string Name { get; set; }
+        }
+    
+        class Box
+        {
+            public Product Product { get; set; }
+        }
+    
+        class WrapFactory
+        {
+            public Box WrapProduct(Func<Product> getProduct)
+            {
+                Box box = new Box();
+                Product product = getProduct.Invoke();
+                box.Product = product;
+                return box;
+            }
+        }
+    
+        class ProductFactory
+        {
+            public Product MakePizza()
+            {
+                Product product = new Product();
+                product.Name = "pizza";
+                return product;
+            }
+    
+            public Product MakeToyCar()
+            {
+                Product product = new Product();
+                product.Name = "ToyCar";
+                return product;
+            }
+        }
+    }
+    ```
+  
   - 正确使用2：回调（**callback**）方法，调用指定的外部方法
+  
     - 相当于“流水线”
     - 常位于代码末尾
     - 委托无返回值
+  
+    ```sql
+    using System;
+    
+    namespace Delegate2Example
+    {
+        internal class Program
+        {
+            static void Main(string[] args)
+            {
+                ProductFactory productFactory = new ProductFactory();
+                WrapFactory wrapFactory = new WrapFactory();
+    
+                Func<Product> func1 = new Func<Product>(productFactory.MakePizza);
+                Func<Product> func2 = new Func<Product>(productFactory.MakeToyCar);
+    
+                Logger logger = new Logger();
+                Action<Product> log = new Action<Product>(logger.Log);
+    
+                Box box1 = wrapFactory.WrapProduct(func1, log);
+                Box box2 = wrapFactory.WrapProduct(func2, log);
+    
+                Console.WriteLine(box1.Product.Name);
+                Console.WriteLine(box2.Product.Name);
+            }
+        }
+    
+        class Logger
+        { 
+            public void Log(Product product) 
+            {
+                Console.WriteLine("Product '{0}' created at {1}. Price is {2}", product.Name, DateTime.UtcNow, product.Price);
+            }
+        }
+    
+        class Product
+        {
+            public string Name { get; set; }
+            public double Price { get; set; }
+        }
+    
+        class Box
+        {
+            public Product Product { get; set; }
+        }
+    
+        class WrapFactory
+        {
+            public Box WrapProduct(Func<Product> getProduct, Action<Product> logCallback)
+            {
+                Box box = new Box();
+                Product product = getProduct.Invoke();
+                if (product.Price>=50)
+                {
+                    logCallback(product);
+                }
+                box.Product = product;
+                return box;
+            }
+        }
+    
+        class ProductFactory
+        {
+            public Product MakePizza()
+            {
+                Product product = new Product();
+                product.Name = "pizza";
+                product.Price = 12;
+                return product;
+            }
+    
+            public Product MakeToyCar()
+            {
+                Product product = new Product();
+                product.Name = "ToyCar";
+                product.Price = 100;
+                return product;
+            }
+        }
+    }
+    ```
+  
 - 注意：难精通+易使用+功能强大的东西，一旦被滥用则后果非常严重
   - 缺点1：这是一种方法级别的紧耦合，现实工作中要慎之又慎
   - 缺点2：使可读性下降、debug的难度增加

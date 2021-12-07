@@ -620,9 +620,201 @@ graph LR
 
 ## 聚合函数
 
+- 对某一列求总和、对满足条件的记录总数求和
 
+  ```sql
+  select SUM(CSharp) as C#总成绩 from ScoreList 
+  select 总人数=COUNT(*) from Students
+  ```
 
+- 求最大值、最小值
 
+  ```sql
+  select MAX(CSharp) as C#最高分, MIN(CSharp) as C#最低分 from ScoreList
+  ```
 
+## 多表之间的数据查询
 
+### 内连接查询
+
+查询结果是两个源表中严格满足连接条件的记录相连
+
+```sql
+select Students.StudentId,C#成绩=CSharp,StudentName,ClassName 
+from ScoreList
+inner join Students on Students.StudentId=ScoreList.StudentId
+inner join StudentClass on Students.ClassId=StudentClass.ClassId
+where CSharp > 80
+```
+
+需要注意的问题：
+
+1. 需要连接的表
+2. 两个表连接的条件（主外键）
+3. 两个表中相同的公共字段必需说明来自那个表
+
+### 左外连接查询
+
+查询的结果包括两个表所有满足连接条件的记录，以及左表所有不满足条件的其他记录。这些不满足的左表记录，在结果的右边位置，全部填上Null值  
+
+```sql
+select Students.StudentId,StudentName, Gender,C#成绩=CSharp
+from Students
+left outer join ScoreList on Students.StudentId=ScoreList.StudentId
+where Gender='男'
+```
+
+### 右外连接查询
+
+查询的结果包括两个表所有满足连接条件的记录，以及右表所有不满足条件的其他记录。这些不满足的右表记录，在结果的左边位置，全部填上Null值  
+
+```sql
+select Students.StudentId,StudentName,ClassName
+from Students
+right outer join StudentClass on Students.ClassId=StudentClass.ClassId
+```
+
+## 分组查询与统计
+
+```sql
+-- 分组查询
+select 班级=StudentClass.ClassName,人数=COUNT(*),C#最高分=MAX(CSharp)
+from Students
+inner join StudentClass on Students.ClassId=StudentClass.ClassId
+inner join ScoreList on ScoreList.StudentId=Students.StudentId
+group by ClassName
+```
+
+### 分组统计筛选--having
+
+```sql
+select 班级=StudentClass.ClassName,人数=COUNT(*),C#最高分=MAX(CSharp),DB平均分=AVG(SQLServer)
+from Students
+inner join StudentClass on Students.ClassId=StudentClass.ClassId
+inner join ScoreList on ScoreList.StudentId=Students.StudentId
+group by ClassName
+having AVG(CSharp)>=70 and AVG(SQLServer)>=70
+```
+
+### 查询重复数据
+
+```sql
+-- 在知道那个字段重复的情况下
+select StudentId from ScoreList group by StudentId having COUNT(*)>1
+
+-- 查询所有的重复的记录
+select * from ScoreList
+where StudentId in(select StudentId from ScoreList group by StudentId having COUNT(*)>1)
+order by StudentId
+
+-- 其他方法
+select * from ScoreList
+where (select COUNT(*) from ScoreList s where s.StudentId=ScoreList.StudentId)>1
+order by StudentId
+```
+
+### 分组查询对比
+
+- `where`子句：
+  - 从数据源中去掉不符合其搜索条件的数据
+- `group by`子句：
+  - 搜集数据行到各个组中，统计函数为各个组计算统计值
+- `having`子句：
+  - 在分组结果中，去掉不符合其组搜索条件的各组数据行
+
+```mermaid
+graph LR
+	A[ where ] 
+	B[ group by ] 
+	C[ having ]
+	A --> B --> C
+	
+```
+
+# 数据库设计
+
+## 数据库设计的基本步骤
+
+- 需求分析
+
+  - 通过向客户调研，了解客户的实际需求
+
+  - 总结分析客服所需要的管理系统，究竟需要哪些处理数据
+
+    > 以学员管理系统开发为背景，分析系统的基本功能：
+    >
+    > 1. 学院信息管理模块：数据库中存放着学员的个人信息；需要对学员信息进行管理
+    > 2. 学员成绩管理模块：数据库中保存每次学员的考试成绩；需要对考试成绩进行分析
+    > 3. 学员班级管理模块：数据库中保存着学员的班级信息
+    > 4. 课程管理模块：数据库中存放着课程信息
+
+- 标识对象（实体）并设计对象的属性
+
+  - 对象（或实体）将来映射为数据库中的数据表
+  - 对象的属性，映射为数据表的字段
+  - 对象应该有唯一的标识（ID）
+
+  ```mermaid
+  classDiagram
+  class 学员信息{
+  	学号<ID>
+  	姓名
+  	性别
+  	出生日期
+  	联系电话
+  	家庭住址
+  	所在班级
+  }
+  
+  class 成绩信息{
+  	学号
+  	课程编号
+  	成绩
+  	考试日期
+  	<ID>
+  }
+  
+  class 班级信息{
+  	班级名称
+  	班级编号<ID>
+  }
+  
+  class 课程信息{
+  	课程编号<ID>
+  	课程名称
+  	学分
+  }
+  ```
+
+  > 注意：
+  >
+  > 1. 需要设计多少实体，取决于需求分析结果，以及设计人员的其他考虑
+  > 2. 对于实体的多少，以及实体属性的确定，需要设计人员不断的根据需要修改
+  > 3. 实体必须有唯一的标识，如果当前实体属性没有能够作为标识的，需要添加ID
+  > 4. 实体设计的好坏，关系到后续系统的修改，应当力求做到完善
+
+- 确定对象之间的映射关系
+  - 对象之间通过外键映射，减少数据冗余
+  - 对象之间的映射关系是通过对象的唯一标识建立的
+  - 常见的对象映射关系有一对一和一对多或者多对多
+
+## 数据库设计的检验与模型设计
+
+### 数据库三范式
+
+- 范式：是具有最小冗余的表结构
+- 范式类型：
+  - 第一范式（1st NF - First Normal Form）
+  - 第二范式（2nd NF - Second Normal Form）
+  - 第三范式（3nd NF - Third Normal Form）
+
+### 第一范式（1st NF - First Normal Form）
+
+- 第一范式：目标是确保每列的原子性（即不可再分的最小数据单元）
+- 第一范式一般都能满足
+- 常见的第一范式不满足情况：地址、姓名（有时分开使用）
+
+### 第二范式（2nd NF - Second Normal Form）
+
+如果一个关系满足1NF，并且除了主键以外的其他列，都和主键列相关，则满足第二范式（2NF）
 
