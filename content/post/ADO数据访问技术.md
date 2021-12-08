@@ -1,5 +1,5 @@
 ---
-title: "SQLServer基础开发技能"
+title: "ADO.NET数据访问技术"
 subtitle: ""
 description: ""
 date: 2021-12-08T00:57:01+08:00
