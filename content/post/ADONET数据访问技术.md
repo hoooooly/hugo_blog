@@ -174,9 +174,9 @@ namespace ADOConnectSql
 
 ```c#
 // 修改实体
-                    string updateString = @"update Students set StudentName='{0}' where StudentId={1}";
-                    updateString = string.Format(updateString,"钱七", 100005);
-                    result = new SqlCommand(updateString, sqlConnection).ExecuteNonQuery();
+string updateString = @"update Students set StudentName='{0}' where StudentId={1}";
+updateString = string.Format(updateString,"钱七", 100005);
+result = new SqlCommand(updateString, sqlConnection).ExecuteNonQuery();
 ```
 
 ### 获得标识列的值
@@ -202,7 +202,7 @@ namespace ADOConnectSql
     - @@identity是数据库中的一个全局变量，里面保存着最近一次生成的标识列的值
 
   ```csharp
-   string sqlString = @"insert into Students(StudentName,Gender,Birthday,StudentIdNo,Age,PhoneNumber,StudentAddress,ClassId)";
+  string sqlString = @"insert into Students(StudentName,Gender,Birthday,StudentIdNo,Age,PhoneNumber,StudentAddress,ClassId)";
   sqlString += "values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}');select @@identity";
   sqlString = string.Format(sqlString, "赵四", "男", "1990-09-01", 012307998730289090, 20, "13972782727", "北京", 1);
   SqlCommand sqlCommand = new SqlCommand(sqlString, sqlConnection);
@@ -210,4 +210,198 @@ namespace ADOConnectSql
   
   Console.WriteLine(res);
   ```
+
+## 数据查询方法
+
+### 返回单一结果查询
+
+- 问题：如何执行如下查询？
+  - 1. 查询全部的学生总数
+    2. 查询学号等于100004的学员姓名
+
+- 使用ExecuteScalar()方法
+
+  - 单一结果：单行单列
+  - 返回object类型
+
+- 代码编写分析：查询学员总数
+
+  ```csharp
+  // 创建sql语句
+  string sql = "select count(*) from Students";
+  // 创建Command对象,查询
+  object result = new SqlCommand(sql, sqlConnection).ExecuteScalar();
+  Console.WriteLine(result);
+  ```
+
+
+#### 单一结果查询步骤总结
+
+1. 创建Connection对象
+2. 组合SQL语句：select单一结果查询
+3. 创建Command对象，并封装Connection和SQL语句
+4. 打开连接
+5. 执行ExecuteScalar()方法，返回单一结果（object类型）
+6. 关闭连接
+
+### 返回只读数据集的查询
+
+- 使用ExecuteReader()方法基本步骤
+  1. 创建Connection对象
+  2. 组合Select类型的SQL语句
+  3. 组建Command对象，并封装Connection和SQL语句
+  4. 打开连接
+  5. 执行ExecuteReader()方法，返回DataReader对象
+  6. 逐行读取查询结果
+  7. 关闭读取器
+  8. 关闭连接
+
+- DataReader对象读取数据的原理
+- 特别注意
+  - DataReader对象采取循环的方式检查并读取数据
+  - 在没有读取完毕之前，数据库的连接将始终处于打开状态
+  - 关闭连接前，必需要关闭读取器，且两者都必需关闭
+
+```csharp
+string sql = "select StudentId,StudentName from Students;select ClassId,ClassName from StudentClass;";
+SqlDataReader result = new SqlCommand(sql, sqlConnection).ExecuteReader();
+// 读取第一个结果集
+while (result.Read())
+{
+    Console.WriteLine(result["StudentId"].ToString()+ result["StudentName"].ToString());
+}
+Console.WriteLine("---------------------------");
+// 判断是否下一个结果集
+if (result.NextResult())
+{
+    while (result.Read())
+    {
+        Console.WriteLine(result["ClassId"].ToString() + result["ClassName"].ToString());
+
+    }
+}
+```
+
+## 基于OOP原则优化数据库访问
+
+### 实现代码复用
+
+- 代码复用的基本形式：编写一个通用的方法
+- 代码复用技术应用要求
+  - 原则：提取不变的，封装变化的
+  - 技巧：不变的作为“方法体”，变化的作为参数
+
+### 实体类在开发中的应用
+
+#### 方法参数的问题与解决
+
+- 方法参数多的缺点
+  - 定义和使用不方便，很容易把参数写错
+  - 当对象的属性发生变化时，方法的参数必需改变
+  - 参数的改变，造成对象接口不稳定，降低可维护性、可扩展性和安全性
+  - 方法参数多，不符合面向对象中“低耦合、高内聚”的要求
+  - 后台方法的编写依赖数据库的完成
+  - 前台代码实现依赖后台方法的完成
+- 问题解决思路
+  - 为类的设计提供一个规范，稳定对象的接口
+  - 不同开发人员只需要按照规范接口即可同步开发
+- 问题解决办法
+  - 使用“实体类”作为方法参数，稳定对外接口
+
+####  实体类的设计
+
+- 概念与形式
+
+  - 只包含属性和构造方法的类称为实体类
+  - 实体属性和数据库实体属性一一对应（字段名称和数据类型一致）
+
+  | 实体类属性类型 | 数据库数据类型              |
+  | -------------- | --------------------------- |
+  | string         | char,nchar,varchar,nvarchar |
+  | int            | int,smallint                |
+  | Date Time      | datetime, smalldatetime     |
+  | float          | float                       |
+  | bool           | byte                        |
+  | decimal        | decimal,money               |
+
+   ```csharp
+   namespace ADOConnectSql.Models
+   {
+       /// <summary>
+       /// 学生实体类
+       /// </summary>
+       class Student
+       {
+           public int StudentId { get; set; }
+           public string StudentName { get; set; }
+           public string Gender { get; set; }
+           public DateTime Birthday { get; set; }
+           public decimal StudentIdNo { get; set; }
+           public string PhoneNumber { get; set; }
+           public int ClassId { get; set; }
+       }
+   }
+   
+   ```
+  
+
+# 数据查询与对象封装
+
+## 封装和解析对象的意义
+
+- 稳定数据访问接口，明确职责
+- 前台开发人员和后台开发人员可以分离并实现同步开发
+  - 数据访问方法只关心如何封装对象，而不关心谁使用
+  - 界面数据展示部分只关心如何解析对象，而不关心如何查询并封装对象
+  - 前台和后台各自职责完全分离，充分体现面向对象开发色思想（高内聚，低耦合）
+
+## 多个同类型对象的封装
+
+```csharp
+public static List<Student> GetAllStudents()
+{
+    string sqlString = "select StudentName,Gender,Birthday,StudentIdNo,Age,PhoneNumber,StudentAddress,ClassId from Students";
+    // 执行查询
+    SqlDataReader objReader = SQLHelper.GetReaderResult(sqlString);
+    List<Student> stuList = new List<Student>();
+    while (objReader.Read())
+    {
+        // 将对象添加到集合
+        stuList.Add(new Student(){
+            StudentName = objReader["StudentName"].ToString(),
+            Gender = objReader["Gender"].ToString(),
+            Birthday = Convert.ToDateTime(objReader["Birthday"]),
+            StudentIdNo = Convert.ToDecimal(objReader["StudentIdNo"]),
+            Age = Convert.ToInt16(objReader["Age"]),
+            PhoneNumber = objReader["PhoneNumber"].ToString(),
+            StudentAddress = objReader["StudentAddress"].ToString(),
+        });
+    }
+    // 关闭读取器
+    objReader.Close();
+    // 返回对象集合
+    return stuList;
+}
+```
+
+#### 调用数据访问方法
+
+```csharp
+// 调用数据访问方法获取学员对象
+List<Student> listStudent= StudentService.GetAllStudents();
+if (listStudent.Count != 0)
+{
+    Console.WriteLine("姓名" + "\t" + "班级" + "\t" + "年龄" + "\t" + "生日" + "\t" + "电话");
+    foreach (Student item in listStudent) // 解析对象
+    {
+        Console.WriteLine(item.StudentName + "\t" + item.ClassId + "\t" + item.Age + "\t" + item.Birthday.ToShortDateString() + "\t" + item.PhoneNumber);
+    }
+}
+else
+{
+    Console.WriteLine("没有要显示的数据！");
+}
+```
+
+
 
