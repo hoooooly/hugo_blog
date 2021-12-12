@@ -403,5 +403,54 @@ else
 }
 ```
 
+### 组合扩展实体的应用
+
+```csharp
+namespace ADOConnectSql
+{
+    /// <summary>
+    /// 组合扩展实体
+    /// </summary>
+    public class StudentExt
+    {
+        public StudentExt()
+        {
+            objStudent = new Student();
+            objScore = new ScoreList();
+            objClass = new StudentClass();
+        }
+        public Student objStudent { get; set; }
+        public StudentClass objClass { get; set; }
+        public ScoreList objScore { get; set; }
+    }
+}	
+```
+
+## 面向对象查询总结
+
+```mermaid
+graph TB
+	A[面向对象查询]
+	B[单对象查询]
+	C[同类型多对象查询]
+	D[不同类型多对象查询]
+	A-->B
+	A-->C
+	A-->D
+	E[对象独立封装]
+	B-->E
+	F[使用List<T>泛型集合封装]
+	C-->F
+	D-->F
+	G["一般"实体封装]
+	H["组合"扩展实体封装]
+	I["简单"扩展实体封装]
+	F-->G
+	F-->H
+	F-->I
+	
+	
+```
+
 
 
