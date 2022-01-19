@@ -18,8 +18,6 @@ typora-root-url: ..\..\static\
 
 通过查看对象资源管理器来区分数据库类型
 
-![image-20211127164211794](/images/image-20211127164211794.png)
-
 - `master`：保存所有数据库的信息（系统登录、系统设置、已经连接的SERVER等）
 - `model`：创建新用户数据库的模板数据库
 - `msdb`：用来保存数据库备份，SQL Agent信息、DTS程序包、SQLSERVER任务等信息
